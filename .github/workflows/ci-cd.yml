@@ -34,10 +34,10 @@ jobs:
       #     docker build -t your-dockerhub-username/backend ./nodeapp/backend
       #     docker push your-dockerhub-username/backend
 
-      - name: Build and Push Frontend Image
-        run: |
-          docker build -t your-dockerhub-username/frontend ./nodeapp/frontend
-          docker push your-dockerhub-username/frontend
+      # - name: Build and Push Frontend Image
+      #   run: |
+      #     docker build -t your-dockerhub-username/frontend ./nodeapp/frontend
+      #     docker push your-dockerhub-username/frontend
 
       - name: Deploy to Kubernetes (if applicable)
         run: |
