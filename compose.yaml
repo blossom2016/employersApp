@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ./nodeapp/backend
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./nodeapp/backend:/app
+    environment:
+      - FLASK_ENV=development
+    restart: always
+
+
+  frontend:
+    build:
+      context: ./nodeapp/frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nodeapp/frontend:/app
+    environment:
+      - NODE_ENV=development
+    restart: always

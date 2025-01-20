@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Lookup</title>
+</head>
+<body>
+    <h1>User Lookup</h1>
+    <label for="userId">Enter User ID:</label>
+    <input type="number" id="userId" />
+    <button onclick="fetchUser()">Get User</button>
+    <div id="userInfo"></div>
+    <h2>Add New User</h2>
+    <form id="addUserForm">
+        <input type="number" id="newUserId" placeholder="ID" required />
+        <input type="text" id="newUserName" placeholder="Name" required />
+        <input type="email" id="newUserEmail" placeholder="Email" required />
+        <textarea id="newUserBio" placeholder="Bio" required></textarea>
+        <button type="button" onclick="addUser()">Add User</button>
+    </form>
+    <p id="addUserResponse"></p>
+    <script>
+        async function fetchUser() {
+            const userId = document.getElementById('userId').value;
+            const userInfoDiv = document.getElementById('userInfo');
+
+            if (!userId) {
+                userInfoDiv.innerHTML = '<p style="color:red;">Please enter a User ID.</p>';
+                return;
+            }
+
+            userInfoDiv.innerHTML = 'Loading...';
+
+            try {
+                const response = await fetch(`/fetch-user?userId=${userId}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    userInfoDiv.innerHTML = `<p style="color:red;">Error: ${data.error}</p>`;
+                } else {
+                    userInfoDiv.innerHTML = `
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Email:</strong> ${data.email}</p>
+                        <p><strong>Bio:</strong> ${data.bio}</p>
+                    `;
+                }
+            } catch (err) {
+                userInfoDiv.innerHTML = '<p style="color:red;">Failed to fetch user data.</p>';
+            }
+        }
+        async function addUser() {
+        const id = document.getElementById('newUserId').value;
+        const name = document.getElementById('newUserName').value;
+        const email = document.getElementById('newUserEmail').value;
+        const bio = document.getElementById('newUserBio').value;
+        const responseDiv = document.getElementById('addUserResponse');
+
+        const payload = { id: parseInt(id), name, email, bio };
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                responseDiv.innerHTML = `<p style="color:green;">${result.message}</p>`;
+            } else {
+                responseDiv.innerHTML = `<p style="color:red;">Error: ${result.error}</p>`;
+            }
+        } catch (err) {
+            responseDiv.innerHTML = `<p style="color:red;">Failed to add user.</p>`;
+        }
+    }
+
+    </script>
+</body>
+</html>
