@@ -29,10 +29,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Backend Image
-        run: |
-          docker build -t your-dockerhub-username/backend ./nodeapp/backend
-          docker push your-dockerhub-username/backend
+      # - name: Build and Push Backend Image
+      #   run: |
+      #     docker build -t your-dockerhub-username/backend ./nodeapp/backend
+      #     docker push your-dockerhub-username/backend
 
       - name: Build and Push Frontend Image
         run: |
