@@ -21,17 +21,36 @@ services:
     environment:
       - NODE_ENV=development
     restart: always
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
 
-  # loki:
-  #   image: grafana/loki:2.9.1
-  #   ports:
-  #     - "3100:3100"
-  #   command: -config.file=/etc/loki/local-config.yaml
-  #   volumes:
-  #     - ./loki-config:/etc/loki
-  # promtail:
-  #   image: grafana/promtail:2.9.1
-  #   volumes:
-  #     - /var/log:/var/log
-  #     - ./promtail-config:/etc/promtail
-  #   command: -config.file=/etc/promtail/config.yml
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"  # Grafana listens on port 3000 internally
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: always
+
+  loki:
+    image: grafana/loki:2.9.1
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config:/etc/loki
+  promtail:
+    image: grafana/promtail:2.9.1
+    volumes:
+      - /var/log:/var/log
+      - ./promtail-config:/etc/promtail
+    command: -config.file=/etc/promtail/config.yml
+volumes:
+  grafana-data:
