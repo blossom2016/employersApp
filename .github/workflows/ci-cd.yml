@@ -42,3 +42,18 @@ jobs:
       - name: Deploy to Kubernetes (if applicable)
         run: |
           echo "Kubernetes deployment commands here"
+  deploy:
+    name: Deploy Services
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Docker Compose
+      - name: Deploy with Docker Compose
+        run: |
+          docker-compose pull
+          docker-compose up -d
