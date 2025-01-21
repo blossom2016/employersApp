@@ -11,8 +11,6 @@ services:
       - FLASK_ENV=development
     restart: always
 
-#second service
-
   frontend:
     build:
       context: ./nodeapp/frontend
@@ -23,4 +21,3 @@ services:
     environment:
       - NODE_ENV=development
     restart: always
-#third service

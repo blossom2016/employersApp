@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dataclasses import dataclass
+from prometheus_flask_exporter import PrometheusMetrics
 
 # Define the User dataclass
 @dataclass
@@ -10,13 +11,7 @@ class User:
     email: str
     bio: str
 
-# Initialize the mock database
 users_db = {}
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-@app.route('/api/user/<int:user_id>', methods=['GET'])
-def home():
-    return jsonify({"message": "Welcome to the User API. Use /user/<user_id> to fetch user data."})
 
 def create_user(id, name, email, bio):
     if id in users_db:
@@ -37,6 +32,11 @@ seed_mock_db()
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
+metrics = PrometheusMetrics(app)  # Enable Prometheus metrics
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Welcome to the User API. Use /user/<user_id> to fetch user data or POST to /user to add a new user."})
 
 @app.route('/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
@@ -44,31 +44,20 @@ def get_user(user_id):
     if user:
         return jsonify({"id": user.id, "name": user.name, "email": user.email, "bio": user.bio}), 200
     return jsonify({"error": "User not found"}), 404
+
 @app.route('/user', methods=['POST'])
 def add_user():
-    """
-    Adds a new user to the database.
-    Expects a JSON payload with 'id', 'name', 'email', and 'bio'.
-    """
     try:
         data = request.get_json()
-
-        # Validate input
         if not all(key in data for key in ("id", "name", "email", "bio")):
             return jsonify({"error": "Missing fields in request body. Required: id, name, email, bio."}), 400
 
-        # Extract and add the user
-        user_id = data["id"]
-        name = data["name"]
-        email = data["email"]
-        bio = data["bio"]
-
-        create_user(user_id, name, email, bio)
+        create_user(data["id"], data["name"], data["email"], data["bio"])
         return jsonify({"message": "User added successfully.", "user": data}), 201
 
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
-    except Exception as e:
+    except Exception:
         return jsonify({"error": "An error occurred while adding the user."}), 500
 
 if __name__ == '__main__':
