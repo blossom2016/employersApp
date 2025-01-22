@@ -1,0 +1,29 @@
+groups:
+  - name: basic_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: node_cpu_seconds_total > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage detected
+          description: CPU usage is above 80% for 5 minutes
+
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Service is down
+          description: The service has been down for more than 1 minute
+      - name: example-alerts
+
+      - alert: HighErrorRate
+        expr: rate(http_request_errors_total[1m]) > 0.05
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: High error rate detected
