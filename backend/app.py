@@ -34,8 +34,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
 
 # Add Prometheus Metrics
-metrics = PrometheusMetrics(app, path='/metrics')
-
+metrics = PrometheusMetrics(app)
 
 @app.route('/')
 def home():
@@ -62,12 +61,6 @@ def add_user():
         return jsonify({"error": str(e)}), 400
     except Exception:
         return jsonify({"error": "An error occurred while adding the user."}), 500
-
-# This route is for demonstration purposes only and should be removed in production.
-@app.route('/metrics', methods=['GET'])
-def conflicting_route():
-    return "This overrides the Prometheus metrics endpoint!"
-
 
 if __name__ == '__main__':
     app.run(debug=True)

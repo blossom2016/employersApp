@@ -1,18 +1,20 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-slim
+# Use Node.js 18 as the base image
+FROM node:18
 
 # Set the working directory
 WORKDIR /app
 
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
 # Install dependencies
-COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the application code
+# Copy the rest of the app's files
 COPY . .
 
-# Expose the Node.js port
+# Expose the port your app will run on
 EXPOSE 3000
 
-# Run the application
-CMD ["node", "index.js"]
+# Set the entry point explicitly
+CMD ["node", "app.js"]
