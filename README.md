@@ -1,6 +1,7 @@
 # CI/CD Pipeline Project
 
-A full-stack application with automated CI/CD pipeline using GitHub Actions and Docker.
+This is a preject that is a full-stack application with automated CI/CD pipeline using GitHub Actions and Docker.
+carried out using GitHub Actions and Docker. The project consists of a frontend React application and a backend Flask application.
 
 ## Project Structure
 
@@ -11,6 +12,8 @@ A full-stack application with automated CI/CD pipeline using GitHub Actions and 
 - Docker containerization for both services
 - GitHub Actions for automated CI/CD
 - Docker Hub integration for container registry
+- Prometus for monitoring and alerting
+- Grafana for monitoring and alerting
 
 ## Prerequisites
 
@@ -41,12 +44,12 @@ docker-compose up --build
 
 ### Frontend
 
-The frontend is a React application located in the `frontend` directory.
+The frontend is a React application located in the `nodeapp/frontend` directory.
 
 To run the frontend locally:
 
 
-cd frontend
+cd nodeapp/frontend
 npm install
 npm start
 
